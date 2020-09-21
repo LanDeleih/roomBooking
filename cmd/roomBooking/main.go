@@ -1,23 +1,24 @@
 package main
 
 import (
+	"context"
 	"github.com/lanDeleih/roomBooking/internal/api"
 	log "github.com/sirupsen/logrus"
 )
 
-func init() {
-	log.SetFormatter(&log.JSONFormatter{})
-}
-
 func main() {
 	logger := log.New()
+	logger.SetFormatter(&log.JSONFormatter{})
 	s := api.NewApi(logger)
-	if err := s.Start(); err != nil {
-		logger.Fatalf("Failed to start server: %s", err)
+	ctx := context.Background()
+
+	go func() {
+		if err := s.Start(); err != nil {
+			logger.Info("Shutting down the server: ", err)
+		}
+	}()
+
+	if err := s.Shutdown(ctx); err != nil {
+		logger.Fatal(err)
 	}
-}
-
-func newDB() (error) {
-
-	return nil
 }
