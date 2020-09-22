@@ -9,6 +9,7 @@ import (
 
 func (r *Router) configureRoutes() {
 	r.Server.Use(middleware.Recover())
+	r.Server.Use(middleware.BodyLimit("2M"))
 	v1 := r.Server.Group("/api/v1")
 	room := v1.Group("/room")
 	{

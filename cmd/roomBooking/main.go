@@ -17,7 +17,7 @@ func main() {
 			logger.Info("Shutting down the server: ", err)
 		}
 	}()
-
+	logger.Info("prometheus metrics available on /metrics")
 	if err := s.Shutdown(ctx); err != nil {
 		logger.Fatal(err)
 	}

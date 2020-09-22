@@ -10,10 +10,11 @@ import (
 type Roomer interface {
 	CreateRoom(room int32) error
 	DeleteRoom(id int32) error
-	GetRooms() (interface{}, error)
+	GetRooms() ([]Room, error)
 	FindRoom(ctx context.Context, room int32) bool
 }
 
+// CreateRoom will create new room in database with incoming room number
 func (m *MongoDB) CreateRoom(room int32) error {
 	ctx, cancel := context.WithTimeout(context.TODO(), 30*time.Second)
 	defer cancel()
@@ -27,7 +28,7 @@ func (m *MongoDB) CreateRoom(room int32) error {
 	}
 	return nil
 }
-
+// DeleteRoom will delete requested room from database
 func (m *MongoDB) DeleteRoom(id int32) error {
 	ctx, cancel := context.WithTimeout(context.TODO(), 30*time.Second)
 	defer cancel()
@@ -42,7 +43,8 @@ func (m *MongoDB) DeleteRoom(id int32) error {
 	return nil
 }
 
-func (m *MongoDB) GetRooms() (interface{}, error) {
+// GetRooms return room list
+func (m *MongoDB) GetRooms() ([]Room, error) {
 	ctx, cancel := context.WithTimeout(context.TODO(), 30*time.Second)
 	defer cancel()
 	curr, err := m.DB.Collection("rooms").Find(ctx, bson.M{})
@@ -59,7 +61,7 @@ func (m *MongoDB) GetRooms() (interface{}, error) {
 	}
 	return result, nil
 }
-
+// FindRoom return true if requested room exist
 func (m *MongoDB) FindRoom(ctx context.Context, room int32) bool {
 	document := bson.M{"number": room}
 	var r Room
