@@ -21,6 +21,7 @@ func NewRoomRepository(logger *log.Logger) RoomRepository {
 	if err != nil {
 		logger.Fatalf("failed to create database connection: %s", err)
 	}
+	// Need to improve create new collection when collection exist
 	if err := createCollection(db); err != nil {
 		logger.Error(err)
 	}

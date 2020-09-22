@@ -80,8 +80,6 @@ func (m *MongoDB) GetAllReservation() (interface{}, error) {
 func (m *MongoDB) FindReservation(ctx context.Context, appointment Appointment, endReservation, startReservation time.Time) bool {
 	filter := bson.M{
 		"room":      appointment.Room,
-		"startDate": bson.M{"$lte": startReservation},
-		"endDate":   bson.M{"$lte": endReservation},
 	}
 	var a MongoAppointment
 	curr, err := m.DB.Collection("booking").Find(ctx, filter)
@@ -96,7 +94,7 @@ func (m *MongoDB) FindReservation(ctx context.Context, appointment Appointment, 
 		if err := curr.Decode(&a); err != nil {
 			m.Logger.Error(err)
 		}
-		if isTimeBetween(a.StartDate, a.EndDate, startReservation) {
+		if isTimeBetween(a.StartDate, a.EndDate, startReservation) && isTimeBetween(a.StartDate, a.EndDate, endReservation) {
 			return true
 		}
 		continue
@@ -106,5 +104,5 @@ func (m *MongoDB) FindReservation(ctx context.Context, appointment Appointment, 
 }
 
 func isTimeBetween(start, end, check time.Time) bool {
-	return check.After(start) && check.Before(end)
+	return check.After(start) || check.Equal(start) && check.Before(end)
 }

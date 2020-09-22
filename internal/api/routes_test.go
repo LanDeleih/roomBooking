@@ -43,7 +43,7 @@ func TestCreateReservation(t *testing.T) {
 
 	body := &roomRepository.Appointment{
 		Customer:  "John",
-		StartDate: "09/24/2020 05:16 PM",
+		StartDate: "10/24/2020 03:16 PM",
 		Duration:  "1h",
 		Room:      1,
 	}
@@ -75,7 +75,7 @@ func TestDuplicateReservation(t *testing.T) {
 
 	body := &roomRepository.Appointment{
 		Customer:  "John",
-		StartDate: "09/24/2020 05:18 PM",
+		StartDate: "10/24/2020 04:13 PM",
 		Duration:  "1h",
 		Room:      1,
 	}
